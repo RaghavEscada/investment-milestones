@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Milestones Calculator</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+            background-color: #f5f5dc; /* Cream color */
+            color: #333; /* Darker text for better readability */
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .container {
+            background: #fff; /* White background for the main container */
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin-top: 20px;
+            width: 90%;
+            max-width: 800px;
+        }
+        h1 {
+            color: #8b4513; /* Dark brown color */
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #4f4f4f; /* Slightly darker gray */
+            font-size: 1.2em;
+        }
+        input[type="number"] {
+            width: calc(100% - 24px);
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #333; /* Darker border */
+            border-radius: 8px;
+            font-size: 1em;
+        }
+        button {
+            padding: 15px 30px;
+            border: none;
+            background-color: #8b4513; /* Dark brown background */
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #704214; /* Slightly darker brown */
+        }
+        .tables-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 30px;
+        }
+        .tables-container table {
+            width: 48%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            border: 1px solid #333; /* Darker border */
+            text-align: center;
+        }
+        th {
+            background-color: #8b4513; /* Dark brown background for headers */
+            color: white;
+            font-size: 1.2em;
+        }
+        td {
+            font-size: 1.1em;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        .disclaimer {
+            margin: 20px;
+            padding: 15px;
+            background-color: #f8f5f0; /* Light cream color */
+            border: 1px solid #e0dcd1; /* Light cream border */
+            border-radius: 8px;
+            color: #333; /* Darker text */
+            text-align: center;
+            font-size: 0.9em;
+            width: 90%;
+            max-width: 800px;
+        }
+        .info {
+            margin: 20px;
+            padding: 15px;
+            background-color: #fff; /* White background */
+            border: 1px solid #e0dcd1; /* Light cream border */
+            border-radius: 8px;
+            color: #333; /* Darker text */
+            text-align: center;
+            font-size: 1em;
+            width: 90%;
+            max-width: 800px;
+        }
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            background-color: #f5f5dc; /* Cream color */
+            color: #333; /* Darker text */
+            text-align: center;
+            font-size: 0.9em;
+            width: 100%;
+            border-top: 1px solid #e0dcd1; /* Light cream border */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Investment Milestones Calculator</h1>
+        <div class="info">
+            Considering you're a college graduate and your age is 22.<br>
+            Interest Rate: 15% annually.
+        </div>
+        <p>Enter your monthly investment amount:</p>
+        <input type="number" id="investmentAmount" placeholder="e.g., 10000">
+        <button onclick="calculateFutureValue()">Calculate</button>
+        <div id="result"></div>
+    </div>
+    <div class="tables-container">
+        <table id="milestonesTable">
+            <thead>
+                <tr>
+                    <th>Milestone</th>
+                    <th>Age When Reached</th>
+                    <th>Total Invested Amount</th>
+                    <th>Total Saved Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <table id="savingsTable">
+            <thead>
+                <tr>
+                    <th>Year</th>
+                    <th>Total Saved Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div class="disclaimer">
+        Disclaimer: Please note that investing in mutual funds carries market risks. It is important to carefully read all scheme-related documents before making any investment decisions. The information contained in the reports is intended for informational purposes only and should be used solely by the recipient. While we have taken great care in compiling the data and contents of this report, we make no representations about the reasonableness of the assumptions or accuracy of any data. Any decisions made based on this information are the sole responsibility of the recipient. We reserve the right to correct any errors or discrepancies in the reports if they are observed or brought to our attention at any time.
+    </div>
+    <footer>
+        Made with love by Raghav
+    </footer>
+    <script>
+        function calculateFutureValue() {
+            const monthlyInvestment = parseFloat(document.getElementById('investmentAmount').value);
+            const annualIncreaseRate = 0.15;
+            const annualReturnRate = 0.15;
+            const milestones = [2000000, 5000000, 10000000, 50000000, 70000000]; // in rupees
+            const milestoneLabels = ["₹20 Lakhs", "₹50 Lakhs", "₹1 Crore", "₹5 Crores", "₹7 Crores"];
+            const startingAge = 22;
+
+            if (isNaN(monthlyInvestment) || monthlyInvestment <= 0) {
+                alert("Please enter a valid investment amount");
+                return;
+            }
+
+            let totalInvestment = 0;
+            let futureValue = 0;
+            let results = [];
+            let milestoneIndex = 0;
+            let savings = {};
+            let investedAmounts = {};
+
+            for (let year = 1; milestoneIndex < milestones.length || year <= 40; year++) {
+                let yearlyInvestment = monthlyInvestment * 12 * Math.pow((1 + annualIncreaseRate), (year - 1));
+                futureValue += yearlyInvestment * Math.pow((1 + annualReturnRate), (1));
+                totalInvestment += yearlyInvestment;
+                
+                if (milestoneIndex < milestones.length && futureValue >= milestones[milestoneIndex]) {
+                    results.push({ milestone: milestoneLabels[milestoneIndex], age: startingAge + year, invested: totalInvestment, saved: futureValue });
+                    milestoneIndex++;
+                }
+
+                if ([4, 8, 10, 12, 20, 40].includes(year)) {
+                    savings[year] = futureValue;
+                    investedAmounts[year] = totalInvestment;
+                }
+            }
+
+            // Update result
+            let resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = "<h2>Savings and Investments Over Time</h2>";
+            resultDiv.innerHTML += `<p><strong>After 4 years:</strong> Invested: ₹${formatNumber(Math.round(investedAmounts[4]))}, Saved: ₹${formatNumber(Math.round(savings[4]))}</p>`;
+            resultDiv.innerHTML += `<p><strong>After 8 years:</strong> Invested: ₹${formatNumber(Math.round(investedAmounts[8]))}, Saved: ₹${formatNumber(Math.round(savings[8]))}</p>`;
+            resultDiv.innerHTML += `<p><strong>After 10 years:</strong> Invested: ₹${formatNumber(Math.round(investedAmounts[10]))}, Saved: ₹${formatNumber(Math.round(savings[10]))}</p>`;
+            resultDiv.innerHTML += `<p><strong>After 12 years:</strong> Invested: ₹${formatNumber(Math.round(investedAmounts[12]))}, Saved: ₹${formatNumber(Math.round(savings[12]))}</p>`;
+            resultDiv.innerHTML += `<p><strong>After 20 years:</strong> Invested: ₹${formatNumber(Math.round(investedAmounts[20]))}, Saved: ₹${formatNumber(Math.round(savings[20]))}</p>`;
+            resultDiv.innerHTML += `<p><strong>After 40 years:</strong> Invested: ₹${formatNumber(Math.round(investedAmounts[40]))}, Saved: ₹${formatNumber(Math.round(savings[40]))}</p>`;
+
+            // Update milestones table
+            let tableBody = document.querySelector('#milestonesTable tbody');
+            tableBody.innerHTML = "";
+            results.forEach(result => {
+                let row = `<tr>
+                    <td>${result.milestone}</td>
+                    <td class="bold">${result.age}</td>
+                    <td>₹${formatNumber(Math.round(result.invested))}</td>
+                    <td class="bold">₹${formatNumber(Math.round(result.saved))}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+
+            // Update savings table
+            let savingsTableBody = document.querySelector('#savingsTable tbody');
+            savingsTableBody.innerHTML = "";
+            for (let year of [4, 8, 10, 12, 20, 40]) {
+                if (savings[year]) {
+                    let row = `<tr>
+                        <td>${year}</td>
+                        <td>₹${formatNumber(Math.round(savings[year]))}</td>
+                    </tr>`;
+                    savingsTableBody.innerHTML += row;
+                }
+            }
+        }
+
+        function formatNumber(num) {
+            return num.toLocaleString('en-IN');
+        }
+    </script>
+</body>
+</html>
